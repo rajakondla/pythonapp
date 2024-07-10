@@ -1,5 +1,5 @@
 from msrestazure.azure_active_directory import MSIAuthentication, ServicePrincipalCredentials
-from azure.keyvault import KeyVaultClient
+from azure.keyvault.secrets import SecretClient
 import os
 
 from flask import Flask
@@ -41,19 +41,20 @@ def run_example(key_vault_name, secret_name):
     # Get credentials
     credentials = get_key_vault_credentials()
 
-    # Create a KeyVault client
-    key_vault_client = KeyVaultClient(
-        credentials
-    )
-
     # Construct the vault uri
     key_vault_uri = "https://" + key_vault_name + ".vault.azure.net/"
 
-    secret = key_vault_client.get_secret(
-        key_vault_uri,  # Your KeyVault URI
-        secret_name,       # Name of your secret.
-        ""              # The version of the secret. Empty string for latest
+    
+    # Create a KeyVault client
+    key_vault_client = SecretClient(
+        key_vault_uri,
+        credentials
     )
+
+    secret = key_vault_client.get_secret(
+        secret_name,       # Name of your secret.
+    )
+    
     return secret.value
 
 
