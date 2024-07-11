@@ -1,5 +1,6 @@
 from msrestazure.azure_active_directory import MSIAuthentication, ServicePrincipalCredentials
 from azure.keyvault.secrets import SecretClient
+from azure.identity import ManagedIdentityCredential
 import os
 
 from flask import Flask
@@ -23,7 +24,7 @@ def get_key_vault_credentials():
     """This tries to get a token using MSI, or fallback to SP env variables.
     """
     if "APPSETTING_WEBSITE_SITE_NAME" in os.environ:
-        return MSIAuthentication()
+        return ManagedIdentityCredential()
     else:
         return ServicePrincipalCredentials(
             client_id=os.environ['AZURE_CLIENT_ID'],
