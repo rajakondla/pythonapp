@@ -23,9 +23,7 @@ def get_key_vault_credentials():
     """This tries to get a token using MSI, or fallback to SP env variables.
     """
     if "APPSETTING_WEBSITE_SITE_NAME" in os.environ:
-        return MSIAuthentication(
-            resource='https://vault.azure.net'
-        )
+        return MSIAuthentication()
     else:
         return ServicePrincipalCredentials(
             client_id=os.environ['AZURE_CLIENT_ID'],
